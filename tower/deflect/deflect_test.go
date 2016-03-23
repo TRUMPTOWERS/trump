@@ -51,3 +51,23 @@ func TestServeHTTP(t *testing.T) {
 		t.Fatalf("Got bad body in test request: %q\n", w.Body.String())
 	}
 }
+
+func TestNoHost(t *testing.T) {
+	t.Parallel()
+	srv := httptest.NewServer(http.HandlerFunc(WriteData))
+	defer srv.Close()
+
+	db := &mockDB{}
+	deflector := New(db)
+
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		panic("error making request")
+	}
+
+	w := httptest.NewRecorder()
+	deflector.ServeHTTP(w, req)
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("Did not get StatusNotFound: Got %d\n", w.Code)
+	}
+}
