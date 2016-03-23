@@ -24,6 +24,7 @@ func WriteData(rw http.ResponseWriter, r *http.Request) {
 }
 
 func TestServeHTTP(t *testing.T) {
+	t.Parallel()
 	srv := httptest.NewServer(http.HandlerFunc(WriteData))
 	defer srv.Close()
 	url, err := url.Parse(srv.URL)

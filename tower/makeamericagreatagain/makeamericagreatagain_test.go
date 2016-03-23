@@ -25,6 +25,7 @@ func WriteData(rw http.ResponseWriter, r *http.Request) {
 }
 
 func TestServeHTTP(t *testing.T) {
+	t.Parallel()
 
 	db := &mockDB{}
 	reg := NewRegistrar(db)
