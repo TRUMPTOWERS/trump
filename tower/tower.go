@@ -6,7 +6,7 @@ import (
 
 	"github.com/trumptowers/trump/tower/deflect"
 	"github.com/trumptowers/trump/tower/hands"
-	"github.com/trumptowers/trump/tower/makeamericagreatagain"
+	"github.com/trumptowers/trump/tower/theleastracist"
 )
 
 func main() {
