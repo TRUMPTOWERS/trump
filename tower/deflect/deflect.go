@@ -6,6 +6,7 @@ import (
 	"net/url"
 )
 
+// Deflector is a handler that proxies based on a provided addrDB
 type Deflector struct {
 	db addrDB
 }
