@@ -1,24 +1,31 @@
 package hands
 
-import "net"
+import "sync"
 
+// DB reprsents an interface to a domain:address database
 type DB struct {
-	db map[string]address
+	db map[string]string
+	sync.Mutex
 }
 
-type address struct {
-	ip   net.IP
-	port int
-}
-
+// New creates a DB
 func New() *DB {
-	return &DB{}
+	thisDB := &DB{}
+	thisDB.db = make(map[string]string)
+	return thisDB
 }
 
-func (db *DB) Set(domain string, ip net.IP, port int) {
-
+// Set adds/replaces a value in the DB
+func (db *DB) Set(domain string, hostPort string) {
+	db.Lock()
+	db.db[domain] = hostPort
+	db.Unlock()
 }
 
-func (db *DB) Get(domain string) (net.IP, int) {
-
+// Get retrives a value from the DB, or (nil,0) if it doesn't exist
+func (db *DB) Get(domain string) string {
+	db.Lock()
+	thisAddress := db.db[domain]
+	db.Unlock()
+	return thisAddress
 }

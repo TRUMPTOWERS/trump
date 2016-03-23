@@ -1,33 +1,48 @@
 package hands_test
 
 import (
-	"net"
 	"testing"
 
 	"github.com/trumptowers/trump/tower/hands"
 )
 
-func TestGetIP(t *testing.T) {
+func TestGetHostPort(t *testing.T) {
+	t.Parallel()
 	mine := hands.New()
-	thisIP := net.ParseIP("127.5.6.250")
+	thisIP := "127.5.6.250:2016"
 
-	mine.Set("trump", thisIP, 2016)
+	mine.Set("trump", thisIP)
 
-	gotIP, _ := mine.Get("trump")
+	gotIP := mine.Get("trump")
 
-	if !gotIP.Equal(thisIP) {
-		t.Fatalf("Mismatched IP, expected %q, got %q\n", thisIP, gotIP)
+	if gotIP != thisIP {
+		t.Fatalf("Mismatched HostPort, expected %q, got %q\n", thisIP, gotIP)
 	}
 }
 
-func TestGetPort(t *testing.T) {
+func TestNotExist(t *testing.T) {
+	t.Parallel()
 	mine := hands.New()
-	thisIP := net.ParseIP("127.5.6.250")
-	mine.Set("trump", thisIP, 2016)
 
-	_, gotPort := mine.Get("trump")
+	gotHostPort := mine.Get("trump")
+	if gotHostPort != "" {
+		t.Fatalf("Got non-zero result for non-existant value: %q\n", gotHostPort)
+	}
+}
 
-	if gotPort != 2016 {
-		t.Fatalf("Mismatched port, expected %d, got %d\n", 2016, gotPort)
+func TestOverwrite(t *testing.T) {
+	t.Parallel()
+
+	mine := hands.New()
+	thisIP := "127.5.6.250:2016"
+	newIP := "127.0.0.1:2020"
+	mine.Set("trump", thisIP)
+	mine.Set("trump", newIP)
+
+	gotHostPort := mine.Get("trump")
+
+	if gotHostPort != newIP {
+
+		t.Fatalf("Got wrong values for overwritten entry: %q\n", gotHostPort)
 	}
 }
