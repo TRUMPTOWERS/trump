@@ -24,7 +24,7 @@ func WriteData(rw http.ResponseWriter, r *http.Request) {
 	rw.Write([]byte("it works"))
 }
 
-func TestServeHTTP(t *testing.T) {
+func TestRegister(t *testing.T) {
 	t.Parallel()
 
 	db := &mockDB{}
@@ -54,5 +54,80 @@ func TestServeHTTP(t *testing.T) {
 
 	if db.name != "trump" {
 		t.Fatalf("Got incorrect name, expected \"trump\", got %q\n", db.name)
+	}
+}
+
+func TestNoPort(t *testing.T) {
+	t.Parallel()
+
+	db := &mockDB{}
+	reg := NewRegistrar(db)
+
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		panic("error making request")
+	}
+	req.RemoteAddr = "192.168.1.1:12351"
+
+	q := req.URL.Query()
+	q.Add("name", "trump")
+	q.Add("port", "")
+	req.URL.RawQuery = q.Encode()
+
+	w := httptest.NewRecorder()
+	reg.ServeHTTP(w, req)
+	if w.Code != http.StatusBadRequest {
+		t.Error(w.Body.String())
+		t.Fatalf("Got bad status code in test request: %d\n", w.Code)
+	}
+}
+
+func TestBadPort(t *testing.T) {
+	t.Parallel()
+
+	db := &mockDB{}
+	reg := NewRegistrar(db)
+
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		panic("error making request")
+	}
+	req.RemoteAddr = "192.168.1.1:12351"
+
+	q := req.URL.Query()
+	q.Add("name", "trump")
+	q.Add("port", "asdf")
+	req.URL.RawQuery = q.Encode()
+
+	w := httptest.NewRecorder()
+	reg.ServeHTTP(w, req)
+	if w.Code != http.StatusBadRequest {
+		t.Error(w.Body.String())
+		t.Fatalf("Got bad status code in test request: %d\n", w.Code)
+	}
+}
+
+func TestNoName(t *testing.T) {
+	t.Parallel()
+
+	db := &mockDB{}
+	reg := NewRegistrar(db)
+
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		panic("error making request")
+	}
+	req.RemoteAddr = "192.168.1.1:12351"
+
+	q := req.URL.Query()
+	q.Add("name", "")
+	q.Add("port", "asdf")
+	req.URL.RawQuery = q.Encode()
+
+	w := httptest.NewRecorder()
+	reg.ServeHTTP(w, req)
+	if w.Code != http.StatusBadRequest {
+		t.Error(w.Body.String())
+		t.Fatalf("Got bad status code in test request: %d\n", w.Code)
 	}
 }
