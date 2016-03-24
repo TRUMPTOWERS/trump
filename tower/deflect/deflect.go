@@ -23,8 +23,11 @@ type addrDB interface {
 func (d *Deflector) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	hostToGet, _, err := net.SplitHostPort(r.Host)
 	if err != nil {
-		http.Error(rw, "No/malformed name: "+r.Host, http.StatusBadRequest)
-		return
+		if r.Host == "" {
+			http.Error(rw, "No/malformed name: "+r.Host, http.StatusBadRequest)
+			return
+		}
+		hostToGet = r.Host
 	}
 	hostPort := d.db.Get(hostToGet)
 	log.Printf("hostPort %q found for request %q\n", hostPort, hostToGet)

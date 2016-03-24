@@ -72,3 +72,45 @@ func TestNoHost(t *testing.T) {
 		t.Fatalf("Did not get StatusBadRequest: Got %d\n", w.Code)
 	}
 }
+
+func TestNoPort(t *testing.T) {
+	t.Parallel()
+
+	db := &mockDB{}
+	deflector := New(db)
+
+	req, err := http.NewRequest("GET", "donald.drumpf", nil)
+	if err != nil {
+		panic("error making request")
+	}
+	req.Host = "donald.drumpf"
+
+	w := httptest.NewRecorder()
+	deflector.ServeHTTP(w, req)
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("Did not get StatusNotFound: Got %d\n", w.Code)
+	}
+}
+
+func TestNoPortAndValidHost(t *testing.T) {
+	t.Parallel()
+
+	srv := httptest.NewServer(http.HandlerFunc(WriteData))
+	defer srv.Close()
+
+	db := &mockDB{hostPort: srv.URL[7:]}
+	deflector := New(db)
+
+	req, err := http.NewRequest("GET", "donald.drumpf", nil)
+	if err != nil {
+		panic("error making request")
+	}
+	req.Host = "donald.drumpf"
+
+	w := httptest.NewRecorder()
+	deflector.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Error(w.Body.String())
+		t.Fatalf("Did not get StatusOK: Got %d\n", w.Code)
+	}
+}
