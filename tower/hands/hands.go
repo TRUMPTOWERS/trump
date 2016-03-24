@@ -60,7 +60,7 @@ func (db *DB) GetTimestamp(domain string) time.Time {
 // GetAll retreives all entries in the database
 func (db *DB) GetAll() []string {
 	db.Lock()
-	var all []string
+	all := make([]string, 0)
 	var expired []string
 
 	for k, v := range db.db {
