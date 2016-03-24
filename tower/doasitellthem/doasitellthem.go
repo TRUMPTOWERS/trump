@@ -42,7 +42,7 @@ func (get *GetAll) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-Type", "json")
 	encoder := json.NewEncoder(rw)
 	names := get.db.GetAll()
-	var blings []Bling
+	blings := make([]Bling, 0)
 	for _, s := range names {
 		blings = append(blings, Bling{
 			Name: s,
