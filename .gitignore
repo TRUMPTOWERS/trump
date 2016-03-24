@@ -3,6 +3,12 @@
 *.a
 *.so
 
+# Front end Stuff
+node_modules/
+npm-debug.log
+frontend/bundle.js
+
+
 # Folders
 _obj
 _test
