@@ -7,6 +7,7 @@ import (
 	"github.com/TRUMPTOWERS/trump/tower/deflect"
 	"github.com/TRUMPTOWERS/trump/tower/hands"
 	"github.com/TRUMPTOWERS/trump/tower/theleastracist"
+	"github.com/conslo/pac"
 )
 
 func main() {
@@ -17,6 +18,7 @@ func main() {
 	regMux := http.NewServeMux()
 
 	regMux.Handle("/register", reg)
+	regMux.Handle("/pac", pac.New(pac.Me, "", 8081, "drumpf"))
 
 	go func() {
 		log.Fatal(http.ListenAndServe(":8081", deflector))
