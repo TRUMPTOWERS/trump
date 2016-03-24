@@ -1,15 +1,13 @@
-package hands_test
+package hands
 
 import (
 	"testing"
 	"time"
-
-	"github.com/TRUMPTOWERS/trump/tower/hands"
 )
 
 func TestGetHostPort(t *testing.T) {
 	t.Parallel()
-	mine := hands.New()
+	mine := New()
 	thisIP := "127.5.6.250:2016"
 
 	mine.Set("trump", thisIP)
@@ -23,7 +21,7 @@ func TestGetHostPort(t *testing.T) {
 
 func TestGetTimestamp(t *testing.T) {
 	t.Parallel()
-	mine := hands.New()
+	mine := New()
 
 	mine.Set("trump", "127.5.6.250:2016")
 
@@ -35,11 +33,25 @@ func TestGetTimestamp(t *testing.T) {
 
 func TestGetExpired(t *testing.T) {
 	t.Parallel()
+
+        mine := &DB{
+            db: make(map[string]dbEntry),
+            duration: time.Duration(time.Second),
+        }
+
+        mine.Set("trump", "127.5.6.250:2016")
+        time.Sleep(1 * time.Second)
+        
+        gotHost := mine.Get("trump")
+
+        if gotHost != "" {
+            t.Fatalf("data persists after expiration")
+        }
 }
 
 func TestGetAll(t *testing.T) {
 	t.Parallel()
-	mine := hands.New()
+	mine := New()
 
 	mine.Set("trump", "127.5.6.250:2016")
 	mine.Set("drumpf", "127.0.0.1:2020")
@@ -51,9 +63,28 @@ func TestGetAll(t *testing.T) {
 	}
 }
 
+
+func TestGetAllExpired(t *testing.T) {
+	t.Parallel()
+
+        mine := &DB{
+            db: make(map[string]dbEntry),
+            duration: time.Duration(time.Second),
+        }
+
+        mine.Set("trump", "127.5.6.250:2016")
+        time.Sleep(1 * time.Second)
+        mine.Set("drumpf", "127.0.0.1:2020")
+        
+        gotHosts := mine.GetAll()
+
+        if len(gotHosts) != 1 || gotHosts[0] != "drumpf" {
+            t.Fatalf("data persists after expiration")
+        }
+}
 func TestNotExist(t *testing.T) {
 	t.Parallel()
-	mine := hands.New()
+	mine := New()
 
 	gotHostPort := mine.Get("trump")
 	if gotHostPort != "" {
@@ -64,7 +95,7 @@ func TestNotExist(t *testing.T) {
 func TestOverwrite(t *testing.T) {
 	t.Parallel()
 
-	mine := hands.New()
+	mine := New()
 	thisIP := "127.5.6.250:2016"
 	newIP := "127.0.0.1:2020"
 	mine.Set("trump", thisIP)
