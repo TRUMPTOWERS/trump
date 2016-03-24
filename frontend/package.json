@@ -11,7 +11,9 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --history-api-fallback --inline --progress"
+    "start": "webpack-dev-server --history-api-fallback --inline --progress",
+	"build": "webpack",
+	"watch": "webpack --watch"
   },
   "dependencies": {
     "angular": "^1.5.2"

@@ -3,14 +3,10 @@ const angular = require('angular');
 var app = angular.module('trump', []);
 
 // Get the blings
-app.factory('BlingService', ['$q', ($q) => {
+app.factory('BlingService', ['$http', ($http) => {
     return {
         getList: () => {
-            // Stub out blings for now
-            return $q.resolve([
-                'http://donateToTrump.drumpf',
-                'http://trumpforpresident.drumpf'
-            ]);
+            return $http.get('/getAll');
         }
     };
 }]);
@@ -27,7 +23,10 @@ app.directive('blings', ['BlingService', (BlingService) => {
                 <div class="active-blings__header">
                     ★★★  ACTIVE BLINGS  ★★★
                 </div>
-                <div class="blings">
+                <div class="no-blings" ng-if="!blings.length">
+                    No Blings to be had
+                </div>
+                <div class="blings" ng-if="blings.length">
                     <bling ng-repeat="b in blings track by $index"
                         index="$index + 1",
                         blingz="b">
@@ -38,8 +37,8 @@ app.directive('blings', ['BlingService', (BlingService) => {
         link: (scope) => {
             scope.blings = [];
             BlingService.getList().then(
-                (blings) => {
-                    scope.blings = blings;
+                (resp) => {
+                    scope.blings = resp.data;
                 }
             );
         }
@@ -59,8 +58,8 @@ app.directive('bling', [() => {
                 <span class="bling">
                     {{ index() }}
                 </span>
-                <a ng-href="{{blingz()}}" class="bling-bling">
-                    {{ blingz() }}
+                <a ng-href="//{{blingz().name}}" class="bling-bling">
+                    {{ blingz().name }}
                 </a>
             </div>
         `
