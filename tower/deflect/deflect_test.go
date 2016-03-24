@@ -36,7 +36,7 @@ func TestServeHTTP(t *testing.T) {
 	}
 	deflector := New(db)
 
-	req, err := http.NewRequest("GET", "", nil)
+	req, err := http.NewRequest("GET", "http://donald.drumpf:8080", nil)
 	if err != nil {
 		panic("error making request")
 	}
@@ -44,6 +44,7 @@ func TestServeHTTP(t *testing.T) {
 	w := httptest.NewRecorder()
 	deflector.ServeHTTP(w, req)
 	if w.Code != http.StatusOK {
+		t.Error(w.Body.String())
 		t.Fatalf("Got bad status code in test request: %d\n", w.Code)
 	}
 
@@ -67,7 +68,7 @@ func TestNoHost(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	deflector.ServeHTTP(w, req)
-	if w.Code != http.StatusNotFound {
-		t.Fatalf("Did not get StatusNotFound: Got %d\n", w.Code)
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("Did not get StatusBadRequest: Got %d\n", w.Code)
 	}
 }

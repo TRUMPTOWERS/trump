@@ -1,6 +1,8 @@
 package deflect
 
 import (
+	"log"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -19,15 +21,21 @@ type addrDB interface {
 // ServerHTTP creates a reverse proxy based on the stored hands, and passes
 // the request to the proxy
 func (d *Deflector) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	hostPort := d.db.Get(r.URL.Host)
+	hostToGet, _, err := net.SplitHostPort(r.Host)
+	if err != nil {
+		http.Error(rw, "No/malformed name: "+r.Host, http.StatusBadRequest)
+		return
+	}
+	hostPort := d.db.Get(hostToGet)
+	log.Printf("hostPort %q found for request %q\n", hostPort, hostToGet)
 
 	if hostPort == "" {
 		http.NotFound(rw, r)
 		return
 	}
 
-	proxyUrl := &url.URL{Host: hostPort, Scheme: "http"}
-	proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
+	proxyURL := &url.URL{Host: hostPort, Scheme: "http"}
+	proxy := httputil.NewSingleHostReverseProxy(proxyURL)
 
 	proxy.ServeHTTP(rw, r)
 }

@@ -19,7 +19,7 @@ func main() {
 	regMux.Handle("/register", reg)
 
 	go func() {
-		log.Fatal(http.ListenAndServe(":80", deflector))
+		log.Fatal(http.ListenAndServe(":8081", deflector))
 	}()
 	log.Fatal(http.ListenAndServe(":2016", regMux))
 }

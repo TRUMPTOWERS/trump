@@ -1,6 +1,7 @@
 package theleastracist
 
 import (
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -41,6 +42,8 @@ func (reg *Registrar) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "No name provided", http.StatusBadRequest)
 	}
 
+	toSave := host + ":" + port
 	reg.db.Set(name, host+":"+port)
+	log.Printf("Saved %q for use at host %q\n", toSave, name)
 	rw.WriteHeader(http.StatusOK)
 }
