@@ -36,11 +36,11 @@ func TestGetExpired(t *testing.T) {
 
         mine := &DB{
             db: make(map[string]dbEntry),
-            duration: time.Duration(time.Second),
+            duration: time.Duration(500 * time.Millisecond),
         }
 
         mine.Set("trump", "127.5.6.250:2016")
-        time.Sleep(1 * time.Second)
+        time.Sleep(501 * time.Millisecond)
         
         gotHost := mine.Get("trump")
 
@@ -69,11 +69,11 @@ func TestGetAllExpired(t *testing.T) {
 
         mine := &DB{
             db: make(map[string]dbEntry),
-            duration: time.Duration(time.Second),
+            duration: time.Duration(500 * time.Millisecond),
         }
 
         mine.Set("trump", "127.5.6.250:2016")
-        time.Sleep(1 * time.Second)
+        time.Sleep(501 * time.Millisecond)
         mine.Set("drumpf", "127.0.0.1:2020")
         
         gotHosts := mine.GetAll()
