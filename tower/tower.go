@@ -8,6 +8,7 @@ import (
 	"github.com/TRUMPTOWERS/trump/tower/doasitellthem"
 	"github.com/TRUMPTOWERS/trump/tower/hands"
 	"github.com/TRUMPTOWERS/trump/tower/theleastracist"
+	"github.com/conslo/pac"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 	deflector := deflect.New(db)
 	regMux := http.NewServeMux()
 	regMux.Handle("/register", reg)
+	regMux.Handle("/pac", pac.New(pac.Me, "", 8081, "drumpf"))
 	api := doasitellthem.NewServeMux(db)
 
 	go func() {
