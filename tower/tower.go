@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/trumptowers/trump/tower/deflect"
-	"github.com/trumptowers/trump/tower/hands"
-	"github.com/trumptowers/trump/tower/theleastracist"
+	"github.com/TRUMPTOWERS/trump/tower/deflect"
+	"github.com/TRUMPTOWERS/trump/tower/hands"
+	"github.com/TRUMPTOWERS/trump/tower/theleastracist"
 )
 
 func main() {

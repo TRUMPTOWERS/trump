@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/trumptowers/trump/tower/hands"
+	"github.com/TRUMPTOWERS/trump/tower/hands"
 )
 
 func TestGetHostPort(t *testing.T) {
