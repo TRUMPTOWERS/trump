@@ -34,19 +34,19 @@ func TestGetTimestamp(t *testing.T) {
 func TestGetExpired(t *testing.T) {
 	t.Parallel()
 
-        mine := &DB{
-            db: make(map[string]dbEntry),
-            duration: time.Duration(500 * time.Millisecond),
-        }
+	mine := &DB{
+		db:       make(map[string]dbEntry),
+		duration: time.Duration(500 * time.Millisecond),
+	}
 
-        mine.Set("trump", "127.5.6.250:2016")
-        time.Sleep(501 * time.Millisecond)
-        
-        gotHost := mine.Get("trump")
+	mine.Set("trump", "127.5.6.250:2016")
+	time.Sleep(501 * time.Millisecond)
 
-        if gotHost != "" {
-            t.Fatalf("data persists after expiration")
-        }
+	gotHost := mine.Get("trump")
+
+	if gotHost != "" {
+		t.Fatalf("data persists after expiration")
+	}
 }
 
 func TestGetAll(t *testing.T) {
@@ -63,24 +63,23 @@ func TestGetAll(t *testing.T) {
 	}
 }
 
-
 func TestGetAllExpired(t *testing.T) {
 	t.Parallel()
 
-        mine := &DB{
-            db: make(map[string]dbEntry),
-            duration: time.Duration(500 * time.Millisecond),
-        }
+	mine := &DB{
+		db:       make(map[string]dbEntry),
+		duration: time.Duration(500 * time.Millisecond),
+	}
 
-        mine.Set("trump", "127.5.6.250:2016")
-        time.Sleep(501 * time.Millisecond)
-        mine.Set("drumpf", "127.0.0.1:2020")
-        
-        gotHosts := mine.GetAll()
+	mine.Set("trump", "127.5.6.250:2016")
+	time.Sleep(501 * time.Millisecond)
+	mine.Set("drumpf", "127.0.0.1:2020")
 
-        if len(gotHosts) != 1 || gotHosts[0] != "drumpf" {
-            t.Fatalf("data persists after expiration")
-        }
+	gotHosts := mine.GetAll()
+
+	if len(gotHosts) != 1 || gotHosts[0] != "drumpf" {
+		t.Fatalf("data persists after expiration")
+	}
 }
 func TestNotExist(t *testing.T) {
 	t.Parallel()

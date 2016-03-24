@@ -16,15 +16,13 @@ func main() {
 	deflector := deflect.New(db)
 	regMux := http.NewServeMux()
 	regMux.Handle("/register", reg)
-
-        api := doasitellthem.NewServeMux(db)
+	api := doasitellthem.NewServeMux(db)
 
 	go func() {
 		log.Fatal(http.ListenAndServe(":8081", deflector))
 	}()
-        go func() {
-                log.Fatal(http.ListenAndServe(":8082", api))
-        }()
-
+	go func() {
+		log.Fatal(http.ListenAndServe(":8082", api))
+	}()
 	log.Fatal(http.ListenAndServe(":2016", regMux))
 }

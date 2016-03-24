@@ -1,21 +1,22 @@
 package doasitellthem
 
 import (
-        "encoding/json"
+	"encoding/json"
 	"net/http"
 )
 
 type addrDB interface {
 	Get(string) string
-        GetAll() []string
+	GetAll() []string
 	Set(string, string)
 }
 
+// Bling are the entries
 type Bling struct {
-    Name string
+	Name string `json:"name"`
 }
 
-// GetAll is a handler that returns a list of all strings in the db 
+// GetAll is a handler that returns a list of all strings in the db
 type GetAll struct {
 	db addrDB
 }
@@ -25,24 +26,27 @@ func NewGetAll(db addrDB) *GetAll {
 	return &GetAll{db: db}
 }
 
+// NewServeMux creates a new Mux that serves both the frontend and
+// corresponding API
 func NewServeMux(db addrDB) http.Handler {
-    mux := http.NewServeMux()
-    getAll := NewGetAll(db)
-    // Handle Route registration here
-    mux.Handle("/getAll", getAll)
-    return mux
+	mux := http.NewServeMux()
+	getAll := NewGetAll(db)
+	// Handle Route registration here
+	mux.Handle("/getAll", getAll)
+	mux.Handle("/", http.FileServer(http.Dir("./frontend")))
+	return mux
 }
 
 // ServeHTTP is the handler for a GetAll
 func (get *GetAll) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-Type", "json")
-        encoder := json.NewEncoder(rw)
-        names := get.db.GetAll()
-        blings := make([]Bling, 0)
-        for _, s := range(names) {
-            blings = append(blings, Bling {
-                Name: s,
-            })
-        }
-        encoder.Encode(blings)
+	encoder := json.NewEncoder(rw)
+	names := get.db.GetAll()
+	blings := make([]Bling, 0)
+	for _, s := range names {
+		blings = append(blings, Bling{
+			Name: s,
+		})
+	}
+	encoder.Encode(blings)
 }
