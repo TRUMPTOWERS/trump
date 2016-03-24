@@ -1,0 +1,167 @@
+* {
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+    font-size: 62.5%;
+    padding: 0;
+    margin: 0;
+}
+body {
+    background-color: #ECECEC;
+    padding-bottom: 30px;
+}
+
+.header {
+    background-color: #2B325F;
+    padding-top: 32px;
+}
+
+.header__inner {
+    background: #820408;
+    border-width: 1px 0 1px 0;
+    border-color: #979797;
+    border-style:  solid;
+    padding: 32px 0;
+}
+
+.header__title {
+    font-family: Impact;
+    font-size: 6.4rem;
+    font-size: 64px;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+    line-height: 79px;
+    text-align: center;
+}
+
+.header__slogan-wrapper {
+    text-align: center;
+}
+
+.header__slogan {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 6px 20px 4px 20px;
+    border: 1px solid #fff;
+    font-family: Palatino-Roman;
+    font-size: 1.6rem;
+    font-size: 16px;
+    color: #D1D1D1;
+    letter-spacing: 0.5px;
+    line-height: 20px;
+}
+
+.instructions-wrapper {
+    background-color: #2B325F;
+    padding: 32px 20px;
+}
+
+.instructions {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 960px;
+}
+
+.instructions__header {
+    font-family: Impact;
+    font-size: 3.26em;
+    font-size: 36px;
+    color: #DEDEDE;
+    letter-spacing: 1.12px;
+    line-height: 44px;
+}
+
+.instructions__code {
+    padding: 40px;
+    background: #212121;
+    border: 1px solid #474747;
+    font-family: Palatino-Roman;
+    font-size: 2rem;
+    font-size: 20px;
+    color: #7A7A7A;
+    letter-spacing: 0.89px;
+    line-height: 34px;
+    margin: 20px 0;
+}
+
+.instructions--highlight {
+    color: #fff;
+    font-weight: bold;
+}
+
+.active-blings-wrapper {
+    width: 100%;
+    max-width: 740px;
+    margin: 0 auto;
+}
+
+.active-blings__header {
+    font-family: Palatino-Roman;
+    font-size: 36px;
+    color: #8C8C8C;
+    line-height: 34px;
+    text-align: center;
+    margin: 40px;
+}
+
+.blings {
+    width: 100%;
+    max-width: 740px;
+    margin: 0 auto;
+}
+
+.blings__bling {
+    margin: 30px 0;
+}
+
+.blings__bling:before {
+    display: inline-block;
+    content: '';
+    height: 100%;
+    vertical-align: middle;
+}
+
+.bling {
+    background: #D8D8D8;
+    border-radius: 50%;
+    border: 1px solid #979797;
+    display: inline-block;
+    vertical-align: middle;
+    height: 60px;
+    width: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-family: Impact;
+    font-size: 36px;
+    color: #8A8A8A;
+    letter-spacing: 1.12px;
+}
+
+.bling-bling {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 30px;
+    font-family: Georgia;
+    font-size: 20px;
+    color: #8A8A8A;
+    letter-spacing: 0.62px;
+    line-height: 22px;
+}
+
+.bling-bling:link, .bling-bling:active, .bling-bling:visited, .bling-bling:hover {
+    color: #8A8A8A;
+}
+
+.no-blings {
+    border: 1px solid #979797;
+    text-align: center;
+    padding: 30px 0;
+    font-family: Palatino-Roman;
+    font-size: 3.6rem;
+    font-size: 36px;
+    color: #8A8A8A;
+    letter-spacing: 1.12px;
+    text-transform: uppercase;
+    margin-top: 50px;
+}
