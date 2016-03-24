@@ -1,0 +1,11 @@
+{
+	"ImportPath": "github.com/TRUMPTOWERS/trump/tower",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v60",
+	"Deps": [
+		{
+			"ImportPath": "github.com/conslo/pac",
+			"Rev": "aa99ad63db123c50639cab600aee8d328114fe10"
+		}
+	]
+}
