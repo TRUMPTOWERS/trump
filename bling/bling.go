@@ -26,10 +26,6 @@ func main() {
 	nameStr := *name
 	portStr := strconv.Itoa(*port)
 
-	if err != nil {
-		log.Fatalln("malformed port number")
-	}
-
 	res, err := http.PostForm("http://donald.drumpf:2016/register",
 		url.Values{"name": {nameStr}, "port": {portStr}})
 
@@ -39,8 +35,8 @@ func main() {
 
 	if res.StatusCode != http.StatusOK {
 		log.Printf("error: response returned with code %d\n", res.StatusCode)
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			log.Println("error reading body")
 			return
