@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/TRUMPTOWERS/trump/tower/doasitellthem"
@@ -14,7 +15,7 @@ type mockDB struct {
 }
 
 func (db *mockDB) GetAll() []string {
-	return []string{"trump", "drumpf"}
+	return db.names
 }
 
 func (db *mockDB) Get(name string) string {
@@ -28,7 +29,9 @@ func (db *mockDB) Set(name string, hostPort string) {
 func TestGetAll(t *testing.T) {
 	t.Parallel()
 
-	db := &mockDB{}
+	db := &mockDB{
+		names: []string{"trump", "drumpf"},
+	}
 	get := doasitellthem.NewGetAll(db)
 
 	req, err := http.NewRequest("GET", "", nil)
@@ -48,5 +51,29 @@ func TestGetAll(t *testing.T) {
 
 	if !(blings[0].Name == "trump" && blings[1].Name == "drumpf") {
 		t.Fatalf("Got incorrect data")
+	}
+}
+
+func TestGetNone(t *testing.T) {
+	t.Parallel()
+
+	db := &mockDB{}
+	get := doasitellthem.NewGetAll(db)
+
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		panic("error making request")
+	}
+
+	w := httptest.NewRecorder()
+	get.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Error(w.Body.String())
+		t.Fatalf("Got bad status code in test request: %d\n", w.Code)
+	}
+
+	str := w.Body.String()
+	if !strings.Contains(str, "[") || !strings.Contains(str, "]") {
+		t.Fatalf("Result wasn't a json array, got %q", str)
 	}
 }
