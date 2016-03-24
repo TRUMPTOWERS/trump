@@ -24,7 +24,7 @@ func WriteData(rw http.ResponseWriter, r *http.Request) {
 	rw.Write([]byte("it works"))
 }
 
-func TestRegister(t *testing.T) {
+func TestRegisterGet(t *testing.T) {
 	t.Parallel()
 
 	db := &mockDB{}
