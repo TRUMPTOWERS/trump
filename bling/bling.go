@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 )
 
@@ -15,16 +16,40 @@ func main() {
 
 	flag.Parse()
 
-	if *name == "" {
-		log.Fatalln("no name given")
-	}
+	useArgs := false
+	var argName string
+	var argPort int
 
-	if *port == 0 {
+	if *name == "" && *port == 0 {
+
+		if len(os.Args) != 3 {
+			log.Fatalln("incorrect number of arguments (expected 2)")
+		}
+
+		useArgs = true
+		argName = os.Args[1]
+		var err error
+		argPort, err = strconv.Atoi(os.Args[2])
+
+		if err != nil {
+			log.Fatalln("invalid port number")
+		}
+	} else if *name == "" {
+		log.Fatalln("no name given")
+	} else if *port == 0 {
 		log.Fatalln("no port given")
 	}
 
-	nameStr := *name
-	portStr := strconv.Itoa(*port)
+	var nameStr string
+	var portStr string
+
+	if useArgs {
+		nameStr = argName
+		portStr = strconv.Itoa(argPort)
+	} else {
+		nameStr = *name
+		portStr = strconv.Itoa(*port)
+	}
 
 	res, err := http.PostForm("http://donald.drumpf:2016/register",
 		url.Values{"name": {nameStr}, "port": {portStr}})
