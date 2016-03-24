@@ -18,13 +18,10 @@ func main() {
 	regMux := http.NewServeMux()
 	regMux.Handle("/register", reg)
 	regMux.Handle("/pac", pac.New(pac.Me, "", 8081, "drumpf"))
-	api := doasitellthem.NewServeMux(db)
+	regMux.Handle("/", doasitellthem.NewHandler(db))
 
 	go func() {
 		log.Fatal(http.ListenAndServe(":8081", deflector))
-	}()
-	go func() {
-		log.Fatal(http.ListenAndServe(":8082", api))
 	}()
 	log.Fatal(http.ListenAndServe(":2016", regMux))
 }

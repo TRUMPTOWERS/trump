@@ -26,9 +26,9 @@ func NewGetAll(db addrDB) *GetAll {
 	return &GetAll{db: db}
 }
 
-// NewServeMux creates a new Mux that serves both the frontend and
+// NewHandler creates a new Mux that serves both the frontend and
 // corresponding API
-func NewServeMux(db addrDB) http.Handler {
+func NewHandler(db addrDB) http.Handler {
 	mux := http.NewServeMux()
 	getAll := NewGetAll(db)
 	// Handle Route registration here
@@ -42,7 +42,7 @@ func (get *GetAll) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-Type", "json")
 	encoder := json.NewEncoder(rw)
 	names := get.db.GetAll()
-	blings := make([]Bling, 0)
+	var blings []Bling
 	for _, s := range names {
 		blings = append(blings, Bling{
 			Name: s,

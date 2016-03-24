@@ -1,7 +1,6 @@
 package hands
 
 import (
-	"log"
 	"sync"
 	"time"
 )
@@ -33,7 +32,6 @@ func (db *DB) Set(domain string, hostPort string) {
 	entry := dbEntry{hostPort: hostPort, timestamp: time.Now()}
 	db.db[domain] = entry
 	db.Unlock()
-	log.Printf("Saved %q for use with %q\n", hostPort, domain)
 }
 
 // Get retrives a value from the DB, or (nil,0) if it doesn't exist
@@ -45,7 +43,6 @@ func (db *DB) Get(domain string) string {
 		thisAddress = ""
 	}
 	db.Unlock()
-	log.Printf("Got %q for requested %q\n", thisAddress, domain)
 	return thisAddress
 }
 

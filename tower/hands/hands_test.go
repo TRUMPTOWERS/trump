@@ -1,6 +1,7 @@
 package hands
 
 import (
+	"sort"
 	"testing"
 	"time"
 )
@@ -36,11 +37,11 @@ func TestGetExpired(t *testing.T) {
 
 	mine := &DB{
 		db:       make(map[string]dbEntry),
-		duration: time.Duration(500 * time.Millisecond),
+		duration: time.Duration(50 * time.Millisecond),
 	}
 
 	mine.Set("trump", "127.5.6.250:2016")
-	time.Sleep(501 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond)
 
 	gotHost := mine.Get("trump")
 
@@ -58,8 +59,9 @@ func TestGetAll(t *testing.T) {
 
 	all := mine.GetAll()
 
-	if !(all[0] == "trump" && all[1] == "drumpf") {
-		t.Fatalf("failed to retreive all entries")
+	sort.Strings(all)
+	if all[0] != "drumpf" || all[1] != "trump" {
+		t.Fatalf("failed to retreive all entries: %v", all)
 	}
 }
 
@@ -68,11 +70,11 @@ func TestGetAllExpired(t *testing.T) {
 
 	mine := &DB{
 		db:       make(map[string]dbEntry),
-		duration: time.Duration(500 * time.Millisecond),
+		duration: time.Duration(50 * time.Millisecond),
 	}
 
 	mine.Set("trump", "127.5.6.250:2016")
-	time.Sleep(501 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond)
 	mine.Set("drumpf", "127.0.0.1:2020")
 
 	gotHosts := mine.GetAll()
@@ -81,6 +83,20 @@ func TestGetAllExpired(t *testing.T) {
 		t.Fatalf("data persists after expiration")
 	}
 }
+
+func TestGetAllEmpty(t *testing.T) {
+	t.Parallel()
+
+	mine := &DB{
+		db: make(map[string]dbEntry),
+	}
+
+	getHosts := mine.GetAll()
+	if getHosts == nil {
+		t.Fatal("GetAll should return an empty slice, not nil")
+	}
+}
+
 func TestNotExist(t *testing.T) {
 	t.Parallel()
 	mine := New()
