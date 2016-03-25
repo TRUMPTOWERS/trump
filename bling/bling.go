@@ -51,7 +51,7 @@ func main() {
 		portStr = strconv.Itoa(*port)
 	}
 
-	res, err := http.PostForm("http://donald.drumpf:2016/register",
+	res, err := http.PostForm("http://donald:2016/register",
 		url.Values{"name": {nameStr}, "port": {portStr}})
 
 	if err != nil {
