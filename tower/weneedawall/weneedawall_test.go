@@ -1,6 +1,7 @@
 package weneedawall_test
 
 import (
+	"log"
 	"net"
 	"testing"
 	"time"
@@ -9,10 +10,12 @@ import (
 )
 
 func TestRespondsToDiscoverMessage(t *testing.T) {
-	discovery := weneedawall.New()
-	go discovery.Listen()
+	discovery, err := weneedawall.NewDiscovery(2016)
+	if err != nil {
+		log.Fatalf("could not create discovery server: %q\n", err)
+	}
+	go discovery.ListenAndServe()
 	defer discovery.Close()
-	time.Sleep(1 * time.Second)
 
 	// Listen to udp on ephmeral port
 	conn, err := net.ListenUDP("udp4", nil)
@@ -50,10 +53,12 @@ func TestRespondsToDiscoverMessage(t *testing.T) {
 }
 
 func TestNotRespondingToUnknownMessage(t *testing.T) {
-	discovery := weneedawall.New()
-	go discovery.Listen()
+	discovery, err := weneedawall.NewDiscovery(2016)
+	if err != nil {
+		log.Fatalf("could not create discovery server: %q\n", err)
+	}
+	go discovery.ListenAndServe()
 	defer discovery.Close()
-	time.Sleep(1 * time.Second)
 
 	// Listen to udp on ephmeral port
 	conn, err := net.ListenUDP("udp4", nil)

@@ -24,9 +24,8 @@ func main() {
 	go func() {
 		log.Fatal(http.ListenAndServe(":8081", deflector))
 	}()
-
 	go func() {
-		log.Fatal(weneedawall.New().Listen())
+		log.Fatal(weneedawall.ListenAndServe(2016))
 	}()
 	log.Fatal(http.ListenAndServe(":2016", regMux))
 }
