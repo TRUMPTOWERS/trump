@@ -23,19 +23,23 @@ func WriteData(rw http.ResponseWriter, r *http.Request) {
 	rw.Write([]byte("it works"))
 }
 
-func TestServeHTTP(t *testing.T) {
+func TestReverseProxyServeHTTP(t *testing.T) {
 	t.Parallel()
+	// Create test HTTP Server to proxy our requests from
 	srv := httptest.NewServer(http.HandlerFunc(WriteData))
 	defer srv.Close()
 	url, err := url.Parse(srv.URL)
 	if err != nil {
 		panic("error making url")
 	}
+
+	// Create new mockDB that will always return our mock server
 	db := &mockDB{
 		hostPort: url.Host,
 	}
 	deflector := New(db)
 
+	// Create mock request
 	req, err := http.NewRequest("GET", "http://donald.drumpf:8080", nil)
 	if err != nil {
 		panic("error making request")
@@ -43,6 +47,8 @@ func TestServeHTTP(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	deflector.ServeHTTP(w, req)
+
+	// Ensure our reverse proxy is working
 	if w.Code != http.StatusOK {
 		t.Error(w.Body.String())
 		t.Fatalf("Got bad status code in test request: %d\n", w.Code)
@@ -53,14 +59,13 @@ func TestServeHTTP(t *testing.T) {
 	}
 }
 
-func TestNoHost(t *testing.T) {
+func TestBadRequestOnNoHost(t *testing.T) {
 	t.Parallel()
-	srv := httptest.NewServer(http.HandlerFunc(WriteData))
-	defer srv.Close()
 
 	db := &mockDB{}
 	deflector := New(db)
 
+	// Request that does not contain a host or port
 	req, err := http.NewRequest("GET", "", nil)
 	if err != nil {
 		panic("error making request")
@@ -73,26 +78,30 @@ func TestNoHost(t *testing.T) {
 	}
 }
 
-func TestNoPort(t *testing.T) {
+func TestNotFound(t *testing.T) {
 	t.Parallel()
 
+	// Create Empty DB
 	db := &mockDB{}
 	deflector := New(db)
 
-	req, err := http.NewRequest("GET", "donald.drumpf", nil)
+	// Request for a domain name not in the db
+	req, err := http.NewRequest("GET", "http://donald.drumpf", nil)
 	if err != nil {
 		panic("error making request")
 	}
 	req.Host = "donald.drumpf"
 
 	w := httptest.NewRecorder()
+
+	// Receive 404 for not finding anything in DB
 	deflector.ServeHTTP(w, req)
 	if w.Code != http.StatusNotFound {
 		t.Fatalf("Did not get StatusNotFound: Got %d\n", w.Code)
 	}
 }
 
-func TestNoPortAndValidHost(t *testing.T) {
+func TestValidHost(t *testing.T) {
 	t.Parallel()
 
 	srv := httptest.NewServer(http.HandlerFunc(WriteData))

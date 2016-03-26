@@ -26,6 +26,18 @@ func (db *mockDB) Set(name string, hostPort string) {
 	panic("not implemented")
 }
 
+func TestNewHandler(t *testing.T) {
+	db := mockDB{}
+	handler := doasitellthem.NewHandler(&db)
+	req, _ := http.NewRequest("GET", "/getAll", nil)
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("error: did not register getAll route correctly")
+	}
+}
+
 func TestGetAll(t *testing.T) {
 	t.Parallel()
 
