@@ -1,7 +1,6 @@
 package weneedawall_test
 
 import (
-	"log"
 	"net"
 	"testing"
 	"time"
@@ -12,7 +11,7 @@ import (
 func TestRespondsToDiscoverMessage(t *testing.T) {
 	discovery, err := weneedawall.NewDiscovery(2016)
 	if err != nil {
-		log.Fatalf("could not create discovery server: %q\n", err)
+		t.Fatalf("could not create discovery server: %q\n", err)
 	}
 	go discovery.ListenAndServe()
 	defer discovery.Close()
@@ -55,7 +54,7 @@ func TestRespondsToDiscoverMessage(t *testing.T) {
 func TestNotRespondingToUnknownMessage(t *testing.T) {
 	discovery, err := weneedawall.NewDiscovery(2016)
 	if err != nil {
-		log.Fatalf("could not create discovery server: %q\n", err)
+		t.Fatalf("could not create discovery server: %q\n", err)
 	}
 	go discovery.ListenAndServe()
 	defer discovery.Close()

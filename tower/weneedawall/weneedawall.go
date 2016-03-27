@@ -17,6 +17,7 @@ type Discovery struct {
 	Conn conn
 }
 
+// NewDiscovery is the constructor for a new discovery server
 func NewDiscovery(port int) (*Discovery, error) {
 	conn, err := net.ListenMulticastUDP("udp4", nil, &net.UDPAddr{
 		IP:   net.IPv4allsys,
@@ -25,10 +26,11 @@ func NewDiscovery(port int) (*Discovery, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Discovery{conn}, nil
+	return &Discovery{Conn: conn}, nil
 }
 
-// ListenAndServe launches a Discovery Server and listens to discover requests
+// ListenAndServe is a shorthand for creating a discovery server and
+// calling it's ListenAndServe method
 func ListenAndServe(port int) error {
 	d, err := NewDiscovery(port)
 	if err != nil {
@@ -37,7 +39,7 @@ func ListenAndServe(port int) error {
 	return d.ListenAndServe()
 }
 
-// Listen listens for incoming discover requestions
+// ListenAndServe listens and responds to incoming discover requestions
 func (d *Discovery) ListenAndServe() error {
 	buf := make([]byte, 1024)
 	// Read the broadcast messages
