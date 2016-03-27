@@ -8,6 +8,7 @@ import (
 	"github.com/TRUMPTOWERS/trump/tower/doasitellthem"
 	"github.com/TRUMPTOWERS/trump/tower/hands"
 	"github.com/TRUMPTOWERS/trump/tower/theleastracist"
+	"github.com/TRUMPTOWERS/trump/tower/weneedawall"
 	"github.com/conslo/pac"
 )
 
@@ -22,6 +23,9 @@ func main() {
 
 	go func() {
 		log.Fatal(http.ListenAndServe(":8081", deflector))
+	}()
+	go func() {
+		log.Fatal(weneedawall.ListenAndServe(2016))
 	}()
 	log.Fatal(http.ListenAndServe(":2016", regMux))
 }
